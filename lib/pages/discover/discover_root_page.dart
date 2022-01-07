@@ -46,8 +46,7 @@ class _DiscoverRootPageState extends State<DiscoverRootPage> {
   }
 
   Widget _buildBody() {
-    if (isSearchActive) return DiscoverSearchPopularReqPage();
-
+    if (isSearchActive) return const DiscoverSearchPopularReqPage();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -57,7 +56,7 @@ class _DiscoverRootPageState extends State<DiscoverRootPage> {
             spacing: 10,
             children: DiscoverPageType.values
                 .map(
-                  (page) => _iconButton(
+                  (page) => _buildIconButton(
                     selected: selectedPage == page,
                     text: page.title(),
                     iconName: page.iconName(),
@@ -85,7 +84,7 @@ class _DiscoverRootPageState extends State<DiscoverRootPage> {
     );
   }
 
-  Widget _iconButton(
+  Widget _buildIconButton(
       {required bool selected,
       required String text,
       String? iconName,
