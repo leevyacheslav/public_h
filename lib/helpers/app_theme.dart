@@ -16,6 +16,7 @@ class AppTheme {
     colorScheme: ColorScheme.light(
       primary: HexColor('#546CFF'),
       onPrimary: Colors.white,
+      secondary: HexColor('#DE095C'),
       background: Colors.white,
       onBackground: HexColor('#2C2D35'),
       surface: HexColor('#F6F6F6'),
