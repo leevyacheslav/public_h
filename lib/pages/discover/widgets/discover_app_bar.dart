@@ -52,12 +52,13 @@ class _DiscoverAppBarState extends State<DiscoverAppBar> {
       color: Theme.of(context).colorScheme.background,
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Expanded(
                 child: FormTextField(
+                  contentPadding: const EdgeInsets.only(bottom: 0, top: 10),
                   fillColor: Theme.of(context).colorScheme.surface,
                   hintText: 'discover_serach_text'.tr(),
                   focusNode: focusNode,

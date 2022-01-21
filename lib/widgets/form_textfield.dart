@@ -33,6 +33,7 @@ class FormTextField extends StatelessWidget {
     this.contentStyle,
     this.hintStyle,
     this.focusedBorder,
+    this.contentPadding,
   })  : hintText = hintText,
         labelText = labelText,
         controller = controller,
@@ -83,61 +84,43 @@ class FormTextField extends StatelessWidget {
   final bool filled;
   final TextInputType? keyboardType;
   final InputBorder? focusedBorder;
+  final EdgeInsets? contentPadding;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (labelText != null)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Text(
-              labelText ?? '',
-              style: labelStyle ??
-                  const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  ),
-            ),
-          ),
-        TextFormField(
-          keyboardType: keyboardType,
-          onSaved: onSaved,
-          onEditingComplete: onEditingComplete,
-          onChanged: onChanged,
-          autofocus: autofocus,
-          focusNode: focusNode,
-          onFieldSubmitted: onSubmitted,
-          maxLines: maxLines,
-          readOnly: readOnly,
-          enabled: enabled,
-          controller: controller,
-          style: contentStyle ?? _textStyle(context),
-          validator: validator,
-          initialValue: initialValue,
-          decoration: InputDecoration(
-            fillColor:
-                fillColor ?? Theme.of(context).colorScheme.secondaryVariant,
-            filled: filled,
-            hintText: hintText,
-            hintStyle: hintStyle,
-            border: _border(context),
-            enabledBorder: _border(context),
-            focusedBorder: focusedBorder ?? _border(context),
-            disabledBorder: _border(context),
-            prefix: prefix,
-            prefixIcon: prefixIcon,
-            prefixIconConstraints:
-                const BoxConstraints(minWidth: 0, minHeight: 0),
-            suffix: suffix,
-            suffixIcon: suffixIcon,
-            suffixIconConstraints:
-                const BoxConstraints(minWidth: 0, minHeight: 0),
-          ),
-        ),
-      ],
+    return TextFormField(
+      keyboardType: keyboardType,
+      onSaved: onSaved,
+      onEditingComplete: onEditingComplete,
+      onChanged: onChanged,
+      autofocus: autofocus,
+      focusNode: focusNode,
+      onFieldSubmitted: onSubmitted,
+      maxLines: maxLines,
+      readOnly: readOnly,
+      enabled: enabled,
+      controller: controller,
+      style: contentStyle ?? _textStyle(context),
+      validator: validator,
+      initialValue: initialValue,
+      decoration: InputDecoration(
+        contentPadding: contentPadding,
+        fillColor: fillColor ?? Theme.of(context).colorScheme.secondaryVariant,
+        filled: filled,
+        // isDense: true,
+        hintText: hintText,
+        hintStyle: hintStyle,
+        border: _border(context),
+        enabledBorder: _border(context),
+        focusedBorder: focusedBorder ?? _border(context),
+        disabledBorder: _border(context),
+        prefix: prefix,
+        prefixIcon: prefixIcon,
+        prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+        suffix: suffix,
+        suffixIcon: suffixIcon,
+        suffixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+      ),
     );
   }
 
