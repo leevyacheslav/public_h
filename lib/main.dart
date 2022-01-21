@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hask/helpers/app_theme.dart';
+import 'package:hask/pages/discover/discover_all_post_page.dart';
 import 'package:hask/pages/discover/discover_page.dart';
 import 'package:hask/pages/discover/discover_root_page.dart';
 import 'package:hask/pages/discover/discover_search_page.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      home: const DiscoverSearchPage(),
+      home: const DiscoverAllPostsPage(),
     );
   }
 }

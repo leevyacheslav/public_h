@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:hask/helpers/app_theme.dart';
 import 'package:hask/pages/discover/widgets/discover_post_tile.dart';
 
 class DiscoverSearchPage extends StatefulWidget {
