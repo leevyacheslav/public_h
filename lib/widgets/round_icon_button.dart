@@ -4,7 +4,7 @@ class RoundIconButton extends StatelessWidget {
   const RoundIconButton({
     Key? key,
     required this.icon,
-    this.size = 15,
+    this.size = 30,
     this.padding = 8,
     this.onTap,
   }) : super(key: key);
@@ -16,23 +16,17 @@ class RoundIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      clipBehavior: Clip.hardEdge,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: EdgeInsets.all(padding),
-          child: SizedBox(
-            child: icon,
-            height: size,
-            width: size,
-          ),
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: size,
+        height: size,
+        padding: EdgeInsets.all(padding),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(size / 2),
         ),
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(
-          size + padding / 2,
-        ),
+        child: icon,
       ),
     );
   }

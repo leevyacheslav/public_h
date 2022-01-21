@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hask/helpers/app_theme.dart';
+import 'package:hask/helpers/hex_color.dart';
 
 class DiscoverTag extends StatelessWidget {
   const DiscoverTag({
@@ -17,7 +18,7 @@ class DiscoverTag extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(6),
-        color: Theme.of(context).colorScheme.background,
+        color: HexColor('#DEE2FF'),
       ),
       child: Row(
         children: [

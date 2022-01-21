@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hask/helpers/app_theme.dart';
+import 'package:hask/pages/discover/discover_page.dart';
 import 'package:hask/pages/discover_detail/discover_post_page.dart';
 
 import 'package:hask/pages/login/main_login_page.dart';
