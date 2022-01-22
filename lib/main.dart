@@ -8,11 +8,14 @@ import 'package:hask/pages/discover/discover_search_page.dart';
 import 'package:hask/pages/discover_detail/discover_post_page.dart';
 
 import 'package:hask/pages/login/main_login_page.dart';
+import 'package:logging/logging.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await EasyLocalization.ensureInitialized();
+
+  _setupLogging();
 
   runApp(
     EasyLocalization(
@@ -25,6 +28,13 @@ void main() async {
   );
 }
 
+void _setupLogging() {
+  Logger.root.level = Level.ALL;
+  Logger.root.onRecord.listen((rec) {
+    print('${rec.level.name}: ${rec.time}: ${rec.message}');
+  });
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -35,7 +45,7 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      home: const DiscoverAllPostsPage(),
+      home: const DiscoverPage(),
     );
   }
 }

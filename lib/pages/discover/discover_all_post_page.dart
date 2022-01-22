@@ -14,7 +14,7 @@ class _DiscoverAllPostsPageState extends State<DiscoverAllPostsPage> {
     return Scaffold(
       appBar: AppBar(),
       body: ListView.separated(
-        padding: EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         itemBuilder: (context, indx) {
           return const AspectRatio(
             aspectRatio: 2,
