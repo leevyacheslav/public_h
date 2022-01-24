@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:hask/pages/discover/widgets/discover_post_card.dart';
 
 class DiscoverPostsCarousel extends StatelessWidget {
   const DiscoverPostsCarousel({
     Key? key,
+    this.children = const [],
   }) : super(key: key);
+
+  final List<Widget> children;
 
   @override
   Widget build(BuildContext context) {
@@ -14,13 +16,13 @@ class DiscoverPostsCarousel extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, indx) {
-          return const AspectRatio(
+          return AspectRatio(
             aspectRatio: 1.5,
-            child: DiscoverPostCard(),
+            child: children[indx],
           );
         },
         separatorBuilder: (context, indx) => const SizedBox(width: 6),
-        itemCount: 10,
+        itemCount: children.length,
       ),
     );
   }

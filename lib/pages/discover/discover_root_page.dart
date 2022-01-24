@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hask/helpers/app_theme.dart';
 import 'package:hask/pages/discover/discover_page.dart';
 import 'package:hask/pages/discover/discover_saved_page.dart';
 import 'package:hask/pages/discover/discover_search_popular_req_page.dart';

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:hask/api/services/discover_category_api_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hask/helpers/snack_bar_factory.dart';
+import 'package:hask/models/discover_category_response.dart';
+import 'package:hask/models/discover_post.dart';
+import 'package:hask/pages/discover/bloc/discover_cubit.dart';
+import 'package:hask/pages/discover/widgets/discover_post_card.dart';
 import 'package:hask/pages/discover/widgets/discover_posts_carousel.dart';
 import 'package:hask/pages/discover/widgets/discover_section.dart';
-import 'package:hask/pages/discover/widgets/discover_trending_carousel.dart';
+import 'package:shimmer/shimmer.dart';
 
 class DiscoverPage extends StatefulWidget {
   const DiscoverPage({Key? key}) : super(key: key);
@@ -12,42 +17,126 @@ class DiscoverPage extends StatefulWidget {
 }
 
 class _DiscoverPageState extends State<DiscoverPage> {
-  final service = DiscoverCategoryApiService.create();
+  final cubit = DiscoverCubit();
 
   @override
   void initState() {
-    _testLoad();
+    cubit.loaData();
     super.initState();
-  }
-
-  _testLoad() async {
-    try {
-      final cats = await service.getCategories();
-      print(cats);
-    } catch (e) {
-      print(e);
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: const [
-          DiscoverSection(
-            child: DiscoverTrendingCarousel(),
-            title: 'Trending topics',
-          ),
-          DiscoverSection(
-            child: DiscoverPostsCarousel(),
-            title: 'Habits',
-          ),
-          DiscoverSection(
-            child: DiscoverPostsCarousel(),
-            title: 'Habits',
-          ),
-        ],
+      body: BlocConsumer<DiscoverCubit, DiscoverState>(
+        bloc: cubit,
+        listener: (context, state) {
+          if (state is DiscoverFailed) {
+            SnackBarFactory.showSnackBar(context, state.error);
+          }
+        },
+        builder: (context, state) {
+          if (state is DiscoverInProgress) return _buildInProgress();
+          if (state is DiscoverSuccess) return _buildBody(state.response);
+          return Container();
+        },
       ),
+    );
+  }
+
+  Widget _buildInProgress() {
+    return IgnorePointer(
+      ignoring: true,
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        enabled: true,
+        child: ListView(
+          children: [
+            /*
+            DiscoverSection(
+              child: DiscoverTrendingCarousel(
+                children: [
+                  for (var i = 0; i < 3; i++)
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                ],
+              ),
+              title: '',
+              titleWidget: Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: Container(
+                  height: 14,
+                  width: 200,
+                  color: Colors.white,
+                ),
+              ),
+            ),*/
+            for (var i = 0; i < 3; i++)
+              DiscoverSection(
+                child: DiscoverPostsCarousel(
+                  children: [
+                    for (var i = 0; i < 3; i++)
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      )
+                  ],
+                ),
+                title: '',
+                titleWidget: Padding(
+                  padding: const EdgeInsets.only(left: 16),
+                  child: Container(
+                    height: 14,
+                    width: 200,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBody(DiscoverCategoryResponse response) {
+    return ListView(
+      children: [
+        /*
+        const DiscoverSection(
+          child: DiscoverTrendingCarousel(
+            children: [
+              DiscoverTrendingTopicsCard(),
+              DiscoverTrendingTopicsCard(),
+              DiscoverTrendingTopicsCard(),
+            ],
+          ),
+          title: 'Trending topics',
+        ),*/
+        for (var category in response.all)
+          DiscoverSection(
+            child: DiscoverPostsCarousel(
+              children: category.posts
+                      ?.map((post) => DiscoverPostCard(
+                            title: post.title,
+                            imageUrl: post.getImageUrl(),
+                            tag: post.categoryName,
+                            video: post.getMediaType() ==
+                                DiscoverPostMediaType.video,
+                          ))
+                      .toList() ??
+                  [],
+            ),
+            title: category.title,
+            onMoreTap: () {},
+          ),
+      ],
     );
   }
 }

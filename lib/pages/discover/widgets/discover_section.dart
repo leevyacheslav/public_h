@@ -6,10 +6,14 @@ class DiscoverSection extends StatelessWidget {
     Key? key,
     required this.title,
     required this.child,
+    this.titleWidget,
+    this.onMoreTap,
   }) : super(key: key);
 
   final String title;
   final Widget child;
+  final Widget? titleWidget;
+  final VoidCallback? onMoreTap;
 
   @override
   Widget build(BuildContext context) {
@@ -17,17 +21,37 @@ class DiscoverSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 12),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            title,
-            style: AppTheme.fontStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Theme.of(context).colorScheme.onBackground,
+        if (titleWidget != null)
+          titleWidget!
+        else
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: AppTheme.fontStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
+                ),
+                if (onMoreTap != null)
+                  TextButton(
+                    onPressed: onMoreTap,
+                    child: Text(
+                      'See all',
+                      style: AppTheme.fontStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  )
+              ],
             ),
           ),
-        ),
         const SizedBox(height: 12),
         child
       ],

@@ -17,10 +17,13 @@ dependencies:
   easy_localization: ^3.0.0
   cached_network_image: ^3.2.0
   webview_flutter: ^3.0.0
+  shimmer: ^2.0.0
 
   chopper: ^4.0.4
   built_value: ^8.1.4
   logging: ^1.0.2
+  flutter_bloc: ^8.0.1
+  routemaster: ^0.9.5
 
 dev_dependencies:
   flutter_test:
