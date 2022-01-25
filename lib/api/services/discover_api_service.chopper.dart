@@ -1,20 +1,20 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'discover_category_api_service.dart';
+part of 'discover_api_service.dart';
 
 // **************************************************************************
 // ChopperGenerator
 // **************************************************************************
 
 // ignore_for_file: always_put_control_body_on_new_line, always_specify_types, prefer_const_declarations
-class _$DiscoverCategoryApiService extends DiscoverCategoryApiService {
-  _$DiscoverCategoryApiService([ChopperClient? client]) {
+class _$DiscoverApiService extends DiscoverApiService {
+  _$DiscoverApiService([ChopperClient? client]) {
     if (client == null) return;
     this.client = client;
   }
 
   @override
-  final definitionType = DiscoverCategoryApiService;
+  final definitionType = DiscoverApiService;
 
   @override
   Future<Response<DiscoverCategoryResponse>> getCategories({int? limit}) {
@@ -30,5 +30,12 @@ class _$DiscoverCategoryApiService extends DiscoverCategoryApiService {
     final $url = '/v1/discover/category/${id}';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<DiscoverCategory, DiscoverCategory>($request);
+  }
+
+  @override
+  Future<Response<DiscoverPost>> getPost(int id) {
+    final $url = '/v1/discover/post/${id}';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<DiscoverPost, DiscoverPost>($request);
   }
 }

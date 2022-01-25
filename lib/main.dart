@@ -1,14 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hask/helpers/app_theme.dart';
-import 'package:hask/pages/discover/discover_all_post_page.dart';
-import 'package:hask/pages/discover/discover_page.dart';
 import 'package:hask/pages/discover/discover_root_page.dart';
-import 'package:hask/pages/discover/discover_search_page.dart';
-import 'package:hask/pages/discover_detail/discover_post_page.dart';
-
-import 'package:hask/pages/login/main_login_page.dart';
+import 'package:hask/pages/discover_post/discover_post_page.dart';
 import 'package:logging/logging.dart';
+import 'package:routemaster/routemaster.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,21 +27,34 @@ void main() async {
 void _setupLogging() {
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((rec) {
+    // ignore: avoid_print
     print('${rec.level.name}: ${rec.time}: ${rec.message}');
   });
 }
+
+final routes = RouteMap(
+  routes: {
+    '/': (_) => const MaterialPage(child: DiscoverRootPage()),
+    '/discover/post/:id': (info) => MaterialPage(
+          child: DiscoverPostPage(
+            postId: int.parse(info.pathParameters['id'] ?? ''),
+          ),
+        )
+  },
+);
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       theme: AppTheme.lightTheme,
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      home: const DiscoverRootPage(),
+      routerDelegate: RoutemasterDelegate(routesBuilder: (_) => routes),
+      routeInformationParser: const RoutemasterParser(),
     );
   }
 }

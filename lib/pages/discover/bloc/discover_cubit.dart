@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:hask/api/services/discover_category_api_service.dart';
+import 'package:hask/api/services/discover_api_service.dart';
 import 'package:hask/models/discover_category_response.dart';
 import 'package:meta/meta.dart';
 
@@ -8,7 +8,7 @@ part 'discover_state.dart';
 class DiscoverCubit extends Cubit<DiscoverState> {
   DiscoverCubit() : super(DiscoverInitial());
 
-  final _service = DiscoverCategoryApiService.create();
+  final _service = DiscoverApiService.create();
 
   loaData() async {
     emit(DiscoverInProgress());

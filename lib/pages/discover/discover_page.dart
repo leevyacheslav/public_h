@@ -7,6 +7,8 @@ import 'package:hask/pages/discover/bloc/discover_cubit.dart';
 import 'package:hask/pages/discover/widgets/discover_post_card.dart';
 import 'package:hask/pages/discover/widgets/discover_posts_carousel.dart';
 import 'package:hask/pages/discover/widgets/discover_section.dart';
+import 'package:hask/widgets/shimmer_view.dart';
+import 'package:routemaster/routemaster.dart';
 import 'package:shimmer/shimmer.dart';
 
 class DiscoverPage extends StatefulWidget {
@@ -47,10 +49,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
   Widget _buildInProgress() {
     return IgnorePointer(
       ignoring: true,
-      child: Shimmer.fromColors(
-        baseColor: Colors.grey[300]!,
-        highlightColor: Colors.grey[100]!,
-        enabled: true,
+      child: ShimmerView(
         child: ListView(
           children: [
             /*
@@ -129,6 +128,10 @@ class _DiscoverPageState extends State<DiscoverPage> {
                             tag: post.categoryName,
                             video: post.getMediaType() ==
                                 DiscoverPostMediaType.video,
+                            onTap: () {
+                              Routemaster.of(context)
+                                  .push('/discover/post/${post.id}');
+                            },
                           ))
                       .toList() ??
                   [],

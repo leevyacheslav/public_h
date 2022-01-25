@@ -4,10 +4,18 @@ import 'package:hask/helpers/app_theme.dart';
 import 'package:hask/pages/discover/widgets/discover_tag.dart';
 import 'package:hask/widgets/round_avatar.dart';
 import 'package:hask/widgets/round_icon_button.dart';
+import 'package:hask/widgets/shimmer_view.dart';
+import 'package:routemaster/routemaster.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class DiscoverPostPage extends StatefulWidget {
-  const DiscoverPostPage({Key? key}) : super(key: key);
+  const DiscoverPostPage({
+    Key? key,
+    required this.postId,
+  }) : super(key: key);
+
+  final int postId;
 
   @override
   _DiscoverPostPageState createState() => _DiscoverPostPageState();
@@ -22,144 +30,267 @@ class _DiscoverPostPageState extends State<DiscoverPostPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            leading: const Align(
-              child: RoundIconButton(
-                size: 32,
-                padding: 0,
-                icon: Icon(
-                  Icons.arrow_back,
-                ),
+      body: Stack(
+        children: [
+          _buildBody(context),
+          _buidInProgress(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverAppBar(
+          leading: Align(
+            child: RoundIconButton(
+              size: 32,
+              padding: 0,
+              icon: const Icon(
+                Icons.arrow_back,
               ),
-            ),
-            floating: true,
-            snap: true,
-            backgroundColor: Colors.white,
-            expandedHeight: MediaQuery.of(context).size.height / 3.4,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Image.asset(
-                    'assets/temp/temp_img.png',
-                    fit: BoxFit.cover,
-                  ),
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    child: Container(
-                      height: 16,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(12),
-                          topRight: Radius.circular(12),
-                        ),
-                        color: Colors.white,
-                      ),
-                    ),
-                  )
-                ],
-              ),
+              onTap: () => Routemaster.of(context).pop(),
             ),
           ),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                IntrinsicHeight(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: hPadding),
-                        child: const DiscoverTag(text: 'Test'),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: SvgPicture.asset('assets/svgs/bookmark.svg'),
-                      ),
-                    ],
-                  ),
+          floating: true,
+          snap: true,
+          backgroundColor: Colors.white,
+          expandedHeight: _headerHeight(),
+          flexibleSpace: FlexibleSpaceBar(
+            background: Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.asset(
+                  'assets/temp/temp_img.png',
+                  fit: BoxFit.cover,
                 ),
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Начни правильно очищать кожу дома',
-                        style: AppTheme.fontStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.w700,
-                          color: Theme.of(context).colorScheme.onBackground,
-                        ),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    height: 16,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(12),
+                        topRight: Radius.circular(12),
                       ),
-                      const SizedBox(height: 6),
-                      Text(
-                        '12 мин',
-                        style: AppTheme.fontStyle(
-                          fontSize: 14,
-                          color: Theme.of(context).colorScheme.onBackground,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          const RoundAvatar(url: ''),
-                          const SizedBox(width: 12),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Liza Terner',
-                                style: AppTheme.fontStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground,
-                                ),
-                              ),
-                              Text(
-                                'К.н.м.,дерматолог',
-                                style: AppTheme.fontStyle(
-                                  fontSize: 14,
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: height,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: WebView(
-                      javascriptMode: JavascriptMode.unrestricted,
-                      onWebViewCreated: (controller) {
-                        webViewController = controller;
-                        _loadHtmlString();
-                      },
-                      onPageFinished: (page) {
-                        _updateHeight();
-                      },
+                      color: Colors.white,
                     ),
                   ),
                 )
               ],
             ),
           ),
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              IntrinsicHeight(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: hPadding),
+                      child: const DiscoverTag(text: 'Test'),
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: SvgPicture.asset('assets/svgs/bookmark.svg'),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Начни правильно очищать кожу дома',
+                      style: AppTheme.fontStyle(
+                        fontSize: 19,
+                        fontWeight: FontWeight.w700,
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      '12 мин',
+                      style: AppTheme.fontStyle(
+                        fontSize: 14,
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        const RoundAvatar(url: ''),
+                        const SizedBox(width: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Liza Terner',
+                              style: AppTheme.fontStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
+                              ),
+                            ),
+                            Text(
+                              'К.н.м.,дерматолог',
+                              style: AppTheme.fontStyle(
+                                fontSize: 14,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: height,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: WebView(
+                    javascriptMode: JavascriptMode.unrestricted,
+                    onWebViewCreated: (controller) {
+                      webViewController = controller;
+                      _loadHtmlString();
+                    },
+                    onPageFinished: (page) {
+                      _updateHeight();
+                    },
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buidInProgress() {
+    return IgnorePointer(
+      ignoring: true,
+      child: ListView(
+        children: [
+          Stack(
+            children: [
+              ShimmerView(
+                child: Container(
+                  height: _headerHeight(),
+                  color: Colors.white,
+                ),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 12, top: 12),
+                  child: RoundIconButton(
+                    size: 32,
+                    padding: 0,
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.black,
+                    ),
+                    onTap: () => Routemaster.of(context).pop(),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          ShimmerView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Container(
+                      width: 60,
+                      height: 30,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Container(
+                      width: double.infinity,
+                      height: 24,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6),
+                    child: Container(
+                      width: 60,
+                      height: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 120,
+                              height: 14,
+                              color: Colors.white,
+                            ),
+                            const SizedBox(height: 4),
+                            Container(
+                              width: 120,
+                              height: 14,
+                              color: Colors.white,
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  for (var i = 0; i < 40; i++)
+                    Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Container(
+                        width: double.infinity,
+                        height: 16,
+                        color: Colors.white,
+                      ),
+                    )
+                ],
+              ),
+            ),
+          )
         ],
       ),
     );
+  }
+
+  double _headerHeight() {
+    return MediaQuery.of(context).size.height / 3.4;
   }
 
   _loadHtmlString() {
