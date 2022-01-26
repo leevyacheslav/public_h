@@ -27,7 +27,10 @@ class BuiltValueConverter implements Converter, ErrorConverter {
   @override
   Response<BodyType> convertResponse<BodyType, InnerType>(Response response) {
     final jsonResponse = jsonConverter.convertResponse(response);
-    final body = deserialize<BodyType, InnerType>(jsonResponse.body['data']);
+    var data = jsonResponse.body['data'];
+    // ignore: prefer_if_null_operators
+    data = data != null ? data : jsonResponse.body;
+    final body = deserialize<BodyType, InnerType>(data);
     return jsonResponse.copyWith(body: body);
   }
 

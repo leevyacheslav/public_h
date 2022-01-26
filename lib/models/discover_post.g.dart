@@ -60,12 +60,26 @@ class _$DiscoverPostSerializer implements StructuredSerializer<DiscoverPost> {
         ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
-    value = object.averageReadintTime;
+    value = object.averageReadingTime;
     if (value != null) {
       result
         ..add('average_reading_time')
         ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
+    }
+    value = object.author;
+    if (value != null) {
+      result
+        ..add('author')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(DiscoverPostAuthor)));
+    }
+    value = object.saved;
+    if (value != null) {
+      result
+        ..add('saved')
+        ..add(
+            serializers.serialize(value, specifiedType: const FullType(bool)));
     }
     return result;
   }
@@ -115,8 +129,17 @@ class _$DiscoverPostSerializer implements StructuredSerializer<DiscoverPost> {
               specifiedType: const FullType(String)) as String;
           break;
         case 'average_reading_time':
-          result.averageReadintTime = serializers.deserialize(value,
+          result.averageReadingTime = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
+          break;
+        case 'author':
+          result.author.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(DiscoverPostAuthor))!
+              as DiscoverPostAuthor);
+          break;
+        case 'saved':
+          result.saved = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool?;
           break;
       }
     }
@@ -143,7 +166,11 @@ class _$DiscoverPost extends DiscoverPost {
   @override
   final String mediaType;
   @override
-  final String? averageReadintTime;
+  final String? averageReadingTime;
+  @override
+  final DiscoverPostAuthor? author;
+  @override
+  final bool? saved;
 
   factory _$DiscoverPost([void Function(DiscoverPostBuilder)? updates]) =>
       (new DiscoverPostBuilder()..update(updates)).build();
@@ -157,7 +184,9 @@ class _$DiscoverPost extends DiscoverPost {
       this.thumbnail,
       required this.media,
       required this.mediaType,
-      this.averageReadintTime})
+      this.averageReadingTime,
+      this.author,
+      this.saved})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(id, 'DiscoverPost', 'id');
     BuiltValueNullFieldError.checkNotNull(title, 'DiscoverPost', 'title');
@@ -185,7 +214,9 @@ class _$DiscoverPost extends DiscoverPost {
         thumbnail == other.thumbnail &&
         media == other.media &&
         mediaType == other.mediaType &&
-        averageReadintTime == other.averageReadintTime;
+        averageReadingTime == other.averageReadingTime &&
+        author == other.author &&
+        saved == other.saved;
   }
 
   @override
@@ -196,14 +227,20 @@ class _$DiscoverPost extends DiscoverPost {
                 $jc(
                     $jc(
                         $jc(
-                            $jc($jc($jc(0, id.hashCode), title.hashCode),
-                                description.hashCode),
-                            categoryName.hashCode),
-                        duration.hashCode),
-                    thumbnail.hashCode),
-                media.hashCode),
-            mediaType.hashCode),
-        averageReadintTime.hashCode));
+                            $jc(
+                                $jc(
+                                    $jc(
+                                        $jc($jc(0, id.hashCode),
+                                            title.hashCode),
+                                        description.hashCode),
+                                    categoryName.hashCode),
+                                duration.hashCode),
+                            thumbnail.hashCode),
+                        media.hashCode),
+                    mediaType.hashCode),
+                averageReadingTime.hashCode),
+            author.hashCode),
+        saved.hashCode));
   }
 
   @override
@@ -217,7 +254,9 @@ class _$DiscoverPost extends DiscoverPost {
           ..add('thumbnail', thumbnail)
           ..add('media', media)
           ..add('mediaType', mediaType)
-          ..add('averageReadintTime', averageReadintTime))
+          ..add('averageReadingTime', averageReadingTime)
+          ..add('author', author)
+          ..add('saved', saved))
         .toString();
   }
 }
@@ -258,10 +297,19 @@ class DiscoverPostBuilder
   String? get mediaType => _$this._mediaType;
   set mediaType(String? mediaType) => _$this._mediaType = mediaType;
 
-  String? _averageReadintTime;
-  String? get averageReadintTime => _$this._averageReadintTime;
-  set averageReadintTime(String? averageReadintTime) =>
-      _$this._averageReadintTime = averageReadintTime;
+  String? _averageReadingTime;
+  String? get averageReadingTime => _$this._averageReadingTime;
+  set averageReadingTime(String? averageReadingTime) =>
+      _$this._averageReadingTime = averageReadingTime;
+
+  DiscoverPostAuthorBuilder? _author;
+  DiscoverPostAuthorBuilder get author =>
+      _$this._author ??= new DiscoverPostAuthorBuilder();
+  set author(DiscoverPostAuthorBuilder? author) => _$this._author = author;
+
+  bool? _saved;
+  bool? get saved => _$this._saved;
+  set saved(bool? saved) => _$this._saved = saved;
 
   DiscoverPostBuilder();
 
@@ -276,7 +324,9 @@ class DiscoverPostBuilder
       _thumbnail = $v.thumbnail;
       _media = $v.media;
       _mediaType = $v.mediaType;
-      _averageReadintTime = $v.averageReadintTime;
+      _averageReadingTime = $v.averageReadingTime;
+      _author = $v.author?.toBuilder();
+      _saved = $v.saved;
       _$v = null;
     }
     return this;
@@ -295,20 +345,36 @@ class DiscoverPostBuilder
 
   @override
   _$DiscoverPost build() {
-    final _$result = _$v ??
-        new _$DiscoverPost._(
-            id: BuiltValueNullFieldError.checkNotNull(id, 'DiscoverPost', 'id'),
-            title: BuiltValueNullFieldError.checkNotNull(
-                title, 'DiscoverPost', 'title'),
-            description: description,
-            categoryName: categoryName,
-            duration: duration,
-            thumbnail: thumbnail,
-            media: BuiltValueNullFieldError.checkNotNull(
-                media, 'DiscoverPost', 'media'),
-            mediaType: BuiltValueNullFieldError.checkNotNull(
-                mediaType, 'DiscoverPost', 'mediaType'),
-            averageReadintTime: averageReadintTime);
+    _$DiscoverPost _$result;
+    try {
+      _$result = _$v ??
+          new _$DiscoverPost._(
+              id: BuiltValueNullFieldError.checkNotNull(
+                  id, 'DiscoverPost', 'id'),
+              title: BuiltValueNullFieldError.checkNotNull(
+                  title, 'DiscoverPost', 'title'),
+              description: description,
+              categoryName: categoryName,
+              duration: duration,
+              thumbnail: thumbnail,
+              media: BuiltValueNullFieldError.checkNotNull(
+                  media, 'DiscoverPost', 'media'),
+              mediaType: BuiltValueNullFieldError.checkNotNull(
+                  mediaType, 'DiscoverPost', 'mediaType'),
+              averageReadingTime: averageReadingTime,
+              author: _author?.build(),
+              saved: saved);
+    } catch (_) {
+      late String _$failedField;
+      try {
+        _$failedField = 'author';
+        _author?.build();
+      } catch (e) {
+        throw new BuiltValueNestedFieldError(
+            'DiscoverPost', _$failedField, e.toString());
+      }
+      rethrow;
+    }
     replace(_$result);
     return _$result;
   }

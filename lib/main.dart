@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hask/helpers/app_theme.dart';
+import 'package:hask/pages/discover/discover_all_post_page.dart';
 import 'package:hask/pages/discover/discover_root_page.dart';
 import 'package:hask/pages/discover_post/discover_post_page.dart';
 import 'package:logging/logging.dart';
@@ -34,12 +35,24 @@ void _setupLogging() {
 
 final routes = RouteMap(
   routes: {
-    '/': (_) => const MaterialPage(child: DiscoverRootPage()),
+    '/': (_) => const Redirect('/discover'),
+    '/discover': (_) => const MaterialPage(child: DiscoverRootPage()),
     '/discover/post/:id': (info) => MaterialPage(
           child: DiscoverPostPage(
             postId: int.parse(info.pathParameters['id'] ?? ''),
           ),
-        )
+        ),
+    '/discover/category/:id/posts': (info) => MaterialPage(
+          child: DiscoverAllPostsPage(
+            categoryId: int.parse(info.pathParameters['id'] ?? ''),
+            categoryName: info.queryParameters['category_name'] ?? '',
+          ),
+        ),
+    '/discover/category/:id/posts/post/:post_id': (info) => MaterialPage(
+          child: DiscoverPostPage(
+            postId: int.parse(info.pathParameters['post_id'] ?? ''),
+          ),
+        ),
   },
 );
 

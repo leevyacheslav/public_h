@@ -9,7 +9,6 @@ import 'package:hask/pages/discover/widgets/discover_posts_carousel.dart';
 import 'package:hask/pages/discover/widgets/discover_section.dart';
 import 'package:hask/widgets/shimmer_view.dart';
 import 'package:routemaster/routemaster.dart';
-import 'package:shimmer/shimmer.dart';
 
 class DiscoverPage extends StatefulWidget {
   const DiscoverPage({Key? key}) : super(key: key);
@@ -137,7 +136,14 @@ class _DiscoverPageState extends State<DiscoverPage> {
                   [],
             ),
             title: category.title,
-            onMoreTap: () {},
+            onMoreTap: () {
+              Routemaster.of(context).push(
+                '/discover/category/${category.id}/posts',
+                queryParameters: {
+                  'category_name': category.title,
+                },
+              );
+            },
           ),
       ],
     );

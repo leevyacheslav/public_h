@@ -38,4 +38,27 @@ class _$DiscoverApiService extends DiscoverApiService {
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<DiscoverPost, DiscoverPost>($request);
   }
+
+  @override
+  Future<Response<BuiltList<DiscoverPost>>> getCategoryPosts(
+      int id, Map<String, dynamic> pagination) {
+    final $url = '/v1/discover/category/${id}/posts';
+    final $params = pagination;
+    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    return client.send<BuiltList<DiscoverPost>, DiscoverPost>($request);
+  }
+
+  @override
+  Future<Response<ApiMessage>> savePost(int id) {
+    final $url = '/v1/discover/saved/${id}';
+    final $request = Request('POST', $url, client.baseUrl);
+    return client.send<ApiMessage, ApiMessage>($request);
+  }
+
+  @override
+  Future<Response<ApiMessage>> unSavePost(int id) {
+    final $url = '/v1/discover/saved/${id}';
+    final $request = Request('DELETE', $url, client.baseUrl);
+    return client.send<ApiMessage, ApiMessage>($request);
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:hask/models/discover_post_author.dart';
 
 part 'discover_post.g.dart';
 
@@ -24,7 +25,11 @@ abstract class DiscoverPost
   String get mediaType;
 
   @BuiltValueField(wireName: 'average_reading_time')
-  String? get averageReadintTime;
+  String? get averageReadingTime;
+
+  DiscoverPostAuthor? get author;
+
+  bool? get saved;
 
   factory DiscoverPost([void Function(DiscoverPostBuilder) updates]) =
       _$DiscoverPost;

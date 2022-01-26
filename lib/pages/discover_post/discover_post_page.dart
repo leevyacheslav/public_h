@@ -1,12 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hask/helpers/app_theme.dart';
+import 'package:hask/helpers/snack_bar_factory.dart';
+import 'package:hask/models/discover_post.dart';
 import 'package:hask/pages/discover/widgets/discover_tag.dart';
+import 'package:hask/pages/discover_post/cubit/discover_post_cubit.dart';
+
 import 'package:hask/widgets/round_avatar.dart';
 import 'package:hask/widgets/round_icon_button.dart';
 import 'package:hask/widgets/shimmer_view.dart';
 import 'package:routemaster/routemaster.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class DiscoverPostPage extends StatefulWidget {
@@ -27,19 +32,39 @@ class _DiscoverPostPageState extends State<DiscoverPostPage> {
 
   late WebViewController webViewController;
 
+  late DiscoverPostCubit cubit = DiscoverPostCubit(postId: widget.postId);
+
+  @override
+  void initState() {
+    cubit.loadPost();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          _buildBody(context),
-          _buidInProgress(),
-        ],
+      body: BlocConsumer<DiscoverPostCubit, DiscoverPostState>(
+        bloc: cubit,
+        listener: (context, state) {
+          if (state is DiscoverPostFailed) {
+            SnackBarFactory.showSnackBar(context, state.error);
+          }
+        },
+        builder: (context, state) {
+          if (state is DiscoverPostInProgress) {
+            return _buidInProgress();
+          }
+          final post = cubit.post;
+          if (post != null) {
+            return _buildBody(context, post);
+          }
+          return Container();
+        },
       ),
     );
   }
 
-  Widget _buildBody(BuildContext context) {
+  Widget _buildBody(BuildContext context, DiscoverPost post) {
     return CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
@@ -61,8 +86,8 @@ class _DiscoverPostPageState extends State<DiscoverPostPage> {
             background: Stack(
               fit: StackFit.expand,
               children: [
-                Image.asset(
-                  'assets/temp/temp_img.png',
+                CachedNetworkImage(
+                  imageUrl: post.getImageUrl(),
                   fit: BoxFit.cover,
                 ),
                 Positioned(
@@ -93,11 +118,15 @@ class _DiscoverPostPageState extends State<DiscoverPostPage> {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(left: hPadding),
-                      child: const DiscoverTag(text: 'Test'),
+                      child: DiscoverTag(text: post.categoryName ?? ''),
                     ),
                     IconButton(
-                      onPressed: () {},
-                      icon: SvgPicture.asset('assets/svgs/bookmark.svg'),
+                      onPressed: () {
+                        cubit.setSaved(!cubit.isSaved);
+                      },
+                      icon: cubit.isSaved
+                          ? SvgPicture.asset('assets/svgs/bookmark_fill.svg')
+                          : SvgPicture.asset('assets/svgs/bookmark.svg'),
                     ),
                   ],
                 ),
@@ -109,7 +138,7 @@ class _DiscoverPostPageState extends State<DiscoverPostPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Начни правильно очищать кожу дома',
+                      post.title,
                       style: AppTheme.fontStyle(
                         fontSize: 19,
                         fontWeight: FontWeight.w700,
@@ -118,7 +147,7 @@ class _DiscoverPostPageState extends State<DiscoverPostPage> {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      '12 мин',
+                      post.averageReadingTime ?? "",
                       style: AppTheme.fontStyle(
                         fontSize: 14,
                         color: Theme.of(context).colorScheme.onBackground,
@@ -127,13 +156,13 @@ class _DiscoverPostPageState extends State<DiscoverPostPage> {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const RoundAvatar(url: ''),
+                        RoundAvatar(url: post.author?.avatar ?? ''),
                         const SizedBox(width: 12),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Liza Terner',
+                              post.author?.name ?? '',
                               style: AppTheme.fontStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -142,7 +171,7 @@ class _DiscoverPostPageState extends State<DiscoverPostPage> {
                               ),
                             ),
                             Text(
-                              'К.н.м.,дерматолог',
+                              post.author?.specialization ?? '',
                               style: AppTheme.fontStyle(
                                 fontSize: 14,
                                 color: Theme.of(context).colorScheme.onSurface,
@@ -163,7 +192,7 @@ class _DiscoverPostPageState extends State<DiscoverPostPage> {
                     javascriptMode: JavascriptMode.unrestricted,
                     onWebViewCreated: (controller) {
                       webViewController = controller;
-                      _loadHtmlString();
+                      _loadHtmlString(post.description ?? "");
                     },
                     onPageFinished: (page) {
                       _updateHeight();
@@ -293,8 +322,8 @@ class _DiscoverPostPageState extends State<DiscoverPostPage> {
     return MediaQuery.of(context).size.height / 3.4;
   }
 
-  _loadHtmlString() {
-    webViewController.loadHtmlString(getHtml());
+  _loadHtmlString(String html) {
+    webViewController.loadHtmlString(html);
   }
 
   _updateHeight() async {

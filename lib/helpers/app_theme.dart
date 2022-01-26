@@ -59,4 +59,12 @@ class AppTheme {
         shadows: shadows,
         decoration: decoration,
       );
+
+  static TextStyle appBarTitleStyle(BuildContext context) {
+    return AppTheme.fontStyle(
+      color: Theme.of(context).colorScheme.onBackground,
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+    );
+  }
 }
