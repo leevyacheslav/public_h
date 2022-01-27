@@ -61,4 +61,23 @@ class _$DiscoverApiService extends DiscoverApiService {
     final $request = Request('DELETE', $url, client.baseUrl);
     return client.send<ApiMessage, ApiMessage>($request);
   }
+
+  @override
+  Future<Response<BuiltList<DiscoverPopularSearchRequest>>>
+      getPopularRequests() {
+    final $url = '/v1/discover/popular/request';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<BuiltList<DiscoverPopularSearchRequest>,
+        DiscoverPopularSearchRequest>($request);
+  }
+
+  @override
+  Future<Response<BuiltList<DiscoverPost>>> searchPosts(
+      String query, Map<String, dynamic> pagination) {
+    final $url = '/v1/discover/search';
+    final $params = <String, dynamic>{'query': query};
+    $params.addAll(pagination);
+    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    return client.send<BuiltList<DiscoverPost>, DiscoverPost>($request);
+  }
 }

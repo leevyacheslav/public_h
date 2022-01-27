@@ -13,6 +13,8 @@ abstract class DiscoverPost
   int get id;
   String get title;
   String? get description;
+  @BuiltValueField(wireName: 'short_description')
+  String? get shortDescription;
 
   @BuiltValueField(wireName: 'category_name')
   String? get categoryName;

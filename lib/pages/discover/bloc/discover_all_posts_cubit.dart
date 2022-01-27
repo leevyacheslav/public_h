@@ -20,7 +20,7 @@ class DiscoverAllPostsCubit extends Cubit<DiscoverAllPostsState>
 
   bool isCanLoadMore = false;
 
-  BuiltList<DiscoverPost> posts = BuiltList<DiscoverPost>();
+  List<DiscoverPost> posts = [];
 
   loadData() async {
     emit(DiscoverAllPostsInProgress());
@@ -34,7 +34,7 @@ class DiscoverAllPostsCubit extends Cubit<DiscoverAllPostsState>
       }
       final body = response.body;
       if (body != null) {
-        posts = body;
+        posts = body.toList();
         isCanLoadMore = _checkIsCanLoadMore(body.length);
       }
 
@@ -67,7 +67,7 @@ class DiscoverAllPostsCubit extends Cubit<DiscoverAllPostsState>
 
           final body = response.body;
           if (body != null) {
-            posts = body;
+            posts.addAll(body);
             isCanLoadMore = _checkIsCanLoadMore(body.length);
           }
 

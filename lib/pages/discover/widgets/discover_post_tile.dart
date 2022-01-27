@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hask/helpers/app_theme.dart';
@@ -5,10 +6,18 @@ import 'package:hask/helpers/app_theme.dart';
 class DiscoverPostTile extends StatelessWidget {
   const DiscoverPostTile({
     Key? key,
+    required this.imageUrl,
+    required this.title,
+    required this.desc,
     this.video = false,
+    this.videoLength,
   }) : super(key: key);
 
   final bool video;
+  final String? videoLength;
+  final String imageUrl;
+  final String title;
+  final String desc;
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +32,8 @@ class DiscoverPostTile extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Image.asset(
-              'assets/temp/temp_img.png',
+            child: CachedNetworkImage(
+              imageUrl: imageUrl,
               fit: BoxFit.cover,
             ),
           ),
@@ -39,7 +48,7 @@ class DiscoverPostTile extends StatelessWidget {
               right: 4,
               bottom: 4,
               child: Text(
-                '10:50',
+                videoLength ?? '',
                 style: AppTheme.fontStyle(
                   fontSize: 7,
                   fontWeight: FontWeight.w700,
@@ -53,7 +62,8 @@ class DiscoverPostTile extends StatelessWidget {
       title: Padding(
         padding: const EdgeInsets.only(bottom: 6),
         child: Text(
-          'Как поддерживать ментальное здоровье',
+          title,
+          maxLines: 1,
           style: AppTheme.fontStyle(
             fontSize: 14,
             fontWeight: FontWeight.w700,
@@ -62,7 +72,9 @@ class DiscoverPostTile extends StatelessWidget {
         ),
       ),
       subtitle: Text(
-        'В курсе мы расскажем, с чего начать...',
+        desc,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: AppTheme.fontStyle(
           fontSize: 14,
           color: Theme.of(context).colorScheme.onBackground,

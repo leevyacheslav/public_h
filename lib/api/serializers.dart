@@ -3,6 +3,7 @@ import 'package:built_value/standard_json_plugin.dart';
 import 'package:hask/models/discover_category.dart';
 import 'package:hask/models/discover_category_background.dart';
 import 'package:hask/models/discover_category_response.dart';
+import 'package:hask/models/discover_popular__search_request.dart';
 import 'package:hask/models/discover_post.dart';
 import 'package:hask/models/discover_post_author.dart';
 import 'package:built_collection/built_collection.dart';
@@ -14,7 +15,8 @@ part 'serializers.g.dart';
   DiscoverCategoryBackground,
   DiscoverPost,
   DiscoverPostAuthor,
-  DiscoverCategoryResponse
+  DiscoverCategoryResponse,
+  DiscoverPopularSearchRequest,
 ])
 final Serializers serializers =
     (_$serializers.toBuilder()..addPlugin(StandardJsonPlugin())).build();

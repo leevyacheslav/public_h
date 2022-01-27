@@ -10,6 +10,7 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(DiscoverCategory.serializer)
       ..add(DiscoverCategoryBackground.serializer)
       ..add(DiscoverCategoryResponse.serializer)
+      ..add(DiscoverPopularSearchRequest.serializer)
       ..add(DiscoverPost.serializer)
       ..add(DiscoverPostAuthor.serializer)
       ..addBuilderFactory(

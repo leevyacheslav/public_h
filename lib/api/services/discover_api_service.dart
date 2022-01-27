@@ -4,6 +4,7 @@ import 'package:hask/models/api_message.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:hask/models/discover_category.dart';
 import 'package:hask/models/discover_category_response.dart';
+import 'package:hask/models/discover_popular__search_request.dart';
 import 'package:hask/models/discover_post.dart';
 
 part 'discover_api_service.chopper.dart';
@@ -34,6 +35,16 @@ abstract class DiscoverApiService extends ChopperService {
 
   @Delete(path: "/saved/{id}")
   Future<Response<ApiMessage>> unSavePost(@Path() int id);
+
+  @Get(path: "/popular/request")
+  Future<Response<BuiltList<DiscoverPopularSearchRequest>>>
+      getPopularRequests();
+
+  @Get(path: "/search")
+  Future<Response<BuiltList<DiscoverPost>>> searchPosts(
+    @Query() String query,
+    @QueryMap() Map<String, dynamic> pagination,
+  );
 
   static DiscoverApiService create() {
     final client = ChopperClientFactory.create(_$DiscoverApiService());

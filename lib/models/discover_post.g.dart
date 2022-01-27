@@ -39,6 +39,13 @@ class _$DiscoverPostSerializer implements StructuredSerializer<DiscoverPost> {
         ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
+    value = object.shortDescription;
+    if (value != null) {
+      result
+        ..add('short_description')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
     value = object.categoryName;
     if (value != null) {
       result
@@ -108,6 +115,10 @@ class _$DiscoverPostSerializer implements StructuredSerializer<DiscoverPost> {
           result.description = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
           break;
+        case 'short_description':
+          result.shortDescription = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String?;
+          break;
         case 'category_name':
           result.categoryName = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
@@ -156,6 +167,8 @@ class _$DiscoverPost extends DiscoverPost {
   @override
   final String? description;
   @override
+  final String? shortDescription;
+  @override
   final String? categoryName;
   @override
   final String? duration;
@@ -179,6 +192,7 @@ class _$DiscoverPost extends DiscoverPost {
       {required this.id,
       required this.title,
       this.description,
+      this.shortDescription,
       this.categoryName,
       this.duration,
       this.thumbnail,
@@ -209,6 +223,7 @@ class _$DiscoverPost extends DiscoverPost {
         id == other.id &&
         title == other.title &&
         description == other.description &&
+        shortDescription == other.shortDescription &&
         categoryName == other.categoryName &&
         duration == other.duration &&
         thumbnail == other.thumbnail &&
@@ -230,9 +245,11 @@ class _$DiscoverPost extends DiscoverPost {
                             $jc(
                                 $jc(
                                     $jc(
-                                        $jc($jc(0, id.hashCode),
-                                            title.hashCode),
-                                        description.hashCode),
+                                        $jc(
+                                            $jc($jc(0, id.hashCode),
+                                                title.hashCode),
+                                            description.hashCode),
+                                        shortDescription.hashCode),
                                     categoryName.hashCode),
                                 duration.hashCode),
                             thumbnail.hashCode),
@@ -249,6 +266,7 @@ class _$DiscoverPost extends DiscoverPost {
           ..add('id', id)
           ..add('title', title)
           ..add('description', description)
+          ..add('shortDescription', shortDescription)
           ..add('categoryName', categoryName)
           ..add('duration', duration)
           ..add('thumbnail', thumbnail)
@@ -276,6 +294,11 @@ class DiscoverPostBuilder
   String? _description;
   String? get description => _$this._description;
   set description(String? description) => _$this._description = description;
+
+  String? _shortDescription;
+  String? get shortDescription => _$this._shortDescription;
+  set shortDescription(String? shortDescription) =>
+      _$this._shortDescription = shortDescription;
 
   String? _categoryName;
   String? get categoryName => _$this._categoryName;
@@ -319,6 +342,7 @@ class DiscoverPostBuilder
       _id = $v.id;
       _title = $v.title;
       _description = $v.description;
+      _shortDescription = $v.shortDescription;
       _categoryName = $v.categoryName;
       _duration = $v.duration;
       _thumbnail = $v.thumbnail;
@@ -354,6 +378,7 @@ class DiscoverPostBuilder
               title: BuiltValueNullFieldError.checkNotNull(
                   title, 'DiscoverPost', 'title'),
               description: description,
+              shortDescription: shortDescription,
               categoryName: categoryName,
               duration: duration,
               thumbnail: thumbnail,

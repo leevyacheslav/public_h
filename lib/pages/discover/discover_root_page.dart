@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hask/models/discover_popular__search_request.dart';
+import 'package:hask/pages/discover/bloc/discover_root_cubit.dart';
 import 'package:hask/pages/discover/discover_page.dart';
 import 'package:hask/pages/discover/discover_saved_page.dart';
-import 'package:hask/pages/discover/discover_search_popular_req_page.dart';
+import 'package:hask/pages/discover/discover_search_page.dart';
 import 'package:hask/pages/discover/models/discover_page_type.dart';
 import 'package:hask/pages/discover/widgets/discover_app_bar.dart';
 import 'package:hask/widgets/custom_icon_button.dart';
@@ -17,8 +21,18 @@ class DiscoverRootPage extends StatefulWidget {
 class _DiscoverRootPageState extends State<DiscoverRootPage> {
   var selectedPage = DiscoverPageType.all;
 
-  var queryText = "";
+  final cubit = DiscoverRootCubit();
+  final queryStreamController = StreamController<String>.broadcast();
+  final requestStreamController = StreamController<String>.broadcast();
+
   var isSearchActive = false;
+  DiscoverPopularSearchRequest? request;
+
+  @override
+  void initState() {
+    cubit.loadRequests();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +46,9 @@ class _DiscoverRootPageState extends State<DiscoverRootPage> {
     return PreferredSize(
       preferredSize: const Size.fromHeight(60), // Set this height
       child: DiscoverAppBar(
+        requestSreamController: requestStreamController,
         onSearchChanged: (query) {
-          queryText = query;
+          queryStreamController.add(query);
         },
         isSeachSessionActive: (value) {
           isSearchActive = value;
@@ -44,7 +59,16 @@ class _DiscoverRootPageState extends State<DiscoverRootPage> {
   }
 
   Widget _buildBody() {
-    if (isSearchActive) return const DiscoverSearchPopularReqPage();
+    if (isSearchActive) {
+      return DiscoverSearchPage(
+        requests: cubit.requests,
+        queryStreamController: queryStreamController,
+        onSelected: (request) {
+          this.request = request;
+          requestStreamController.add(request.request);
+        },
+      );
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

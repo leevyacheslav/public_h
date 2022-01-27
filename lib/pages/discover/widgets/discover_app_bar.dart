@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hask/helpers/app_theme.dart';
@@ -9,10 +11,12 @@ class DiscoverAppBar extends StatefulWidget {
     Key? key,
     this.onSearchChanged,
     this.isSeachSessionActive,
+    this.requestSreamController,
   }) : super(key: key);
 
   final ValueChanged<bool>? isSeachSessionActive;
   final ValueChanged<String>? onSearchChanged;
+  final StreamController<String>? requestSreamController;
 
   @override
   _DiscoverAppBarState createState() => _DiscoverAppBarState();
@@ -22,6 +26,8 @@ class _DiscoverAppBarState extends State<DiscoverAppBar> {
   final focusNode = FocusNode();
   final textController = TextEditingController();
   var isSearchActive = false;
+
+  StreamSubscription? subscription;
 
   @override
   void initState() {
@@ -36,6 +42,10 @@ class _DiscoverAppBarState extends State<DiscoverAppBar> {
       }
     });
 
+    subscription = widget.requestSreamController?.stream.listen((request) {
+      textController.text = request;
+    });
+
     super.initState();
   }
 
@@ -43,6 +53,7 @@ class _DiscoverAppBarState extends State<DiscoverAppBar> {
   void dispose() {
     focusNode.dispose();
     textController.dispose();
+    subscription?.cancel();
     super.dispose();
   }
 
